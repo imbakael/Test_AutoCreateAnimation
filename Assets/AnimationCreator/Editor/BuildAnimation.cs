@@ -12,7 +12,6 @@ public class BuildAnimation : EditorWindow {
     private static readonly string animationPath = "Assets/AnimationCreate/Animation"; // 生成的Animation的路径
     private static readonly string animationControllerPath = "Assets/AnimationCreate/AnimationController"; // 生成的AnimationController的路径
     private static readonly string prefabPath = "Assets/AnimationCreate/Prefabs"; // 生成的Prefab的路径
-    private static readonly string finalPrefabPath = "Assets/AnimationCreate/FinalPrefabs"; // 最终游戏内的角色prefab
     private float frameRate = 60; // 1秒有多少帧
     private int frame = 1; // 每张图持续多少帧
 
@@ -29,29 +28,8 @@ public class BuildAnimation : EditorWindow {
         if (GUILayout.Button("生成动画", GUILayout.Height(50))) {
             BuildAniamtions();
         }
-
-        GUILayout.Space(10);
-        if (GUILayout.Button("根据动画生成最终游戏中的角色prefab", GUILayout.Height(50))) {
-            BuildFinalPrefab();
-        }
     }
 
-    private void BuildFinalPrefab() {
-        var directoryInfo = new DirectoryInfo(prefabPath);
-        FileInfo[] prefabs = directoryInfo.GetFiles("*.prefab");
-        for (int i = 0; i < prefabs.Length; i++) {
-            FileInfo info = prefabs[i];
-            GameObject animPrefab = Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>(DataPathToAssetPath(info.FullName)));
-            var finalPrefab = new GameObject(animPrefab.name.Replace("(Clone)", ""));
-            animPrefab.transform.SetParent(finalPrefab.transform, false);
-            animPrefab.name = "ViewContainer";
-            Directory.CreateDirectory(prefabPath);
-            PrefabUtility.SaveAsPrefabAsset(finalPrefab, finalPrefabPath + "/" + finalPrefab.name + ".prefab");
-            DestroyImmediate(finalPrefab);
-        }
-    }
-
-    //生成所有动画
     private void BuildAniamtions() {
         if (!Directory.Exists(resPath)) {
             Debug.LogError("请创建资源文件夹,并按照格式放入动画资源!!!");
@@ -86,7 +64,6 @@ public class BuildAnimation : EditorWindow {
         AddEvent(clips);
     }
 
-    //把某个动作文件夹下的所有图片生成出一个动画文件
     private AnimationClip BuildAnimationClip(DirectoryInfo dictorys) {
         frameRate = Convert.ToInt32(dictorys.Name.Split('_')[1].Replace("fps", ""));
         AnimationClip clip = GetAnimationClip();
@@ -115,15 +92,12 @@ public class BuildAnimation : EditorWindow {
     private void SetObjectReferenceCurve(DirectoryInfo directoryInfo, AnimationClip clip, string clipName) {
         FileInfo[] images = directoryInfo.GetFiles("*.png");
         Array.Sort(images, CompareFileInfo);
-        var imagesWithDoubleLastFrame = new List<FileInfo>(images) {
-            images[images.Length - 1] // 动画的最后一张图双倍(否则最后一张图只持续1帧时间)
-        };
         var curveBinding = new EditorCurveBinding {
             type = typeof(SpriteRenderer),
             path = "",
             propertyName = "m_Sprite"
         };
-        ObjectReferenceKeyframe[] keyFrames = GetKeyFrames(imagesWithDoubleLastFrame.ToArray());
+        ObjectReferenceKeyframe[] keyFrames = GetKeyFrames(images);
         AnimationUtility.SetObjectReferenceCurve(clip, curveBinding, keyFrames);
     }
 
@@ -171,10 +145,7 @@ public class BuildAnimation : EditorWindow {
     private AnimatorController BuildAnimationController(List<AnimationClip> clips, string name) {
         Directory.CreateDirectory(animationControllerPath);
         AnimatorController animatorController = AnimatorController.CreateAnimatorControllerAtPath(animationControllerPath + "/" + name + ".controller");
-        animatorController.AddParameter("IsActive", AnimatorControllerParameterType.Bool);
-        //animatorController.AddParameter("X", AnimatorControllerParameterType.Int);
-        //animatorController.AddParameter("Y", AnimatorControllerParameterType.Int);
-        //animatorController.AddParameter("AnimationType", AnimatorControllerParameterType.Int);
+        animatorController.AddParameter("AnimationType", AnimatorControllerParameterType.Int);
         AnimatorControllerLayer layer = animatorController.layers[0];
         AnimatorStateMachine sm = layer.stateMachine;
         foreach (AnimationClip currentClip in clips) {
@@ -187,7 +158,7 @@ public class BuildAnimation : EditorWindow {
             ast.hasExitTime = false;
             ast.canTransitionToSelf = false;
             ast.duration = 0f;
-            ast.AddCondition(AnimatorConditionMode.If, 1, "IsActive");
+            ast.AddCondition(AnimatorConditionMode.Equals, -1, "AnimationType");
         }
         AssetDatabase.SaveAssets();
         return animatorController;
