@@ -16,6 +16,7 @@ public abstract class FSMState
 
     public abstract void Init();
     public virtual void Enter(FSMData data) { }
+    public virtual void Execute(FSMData data) { }
     public virtual void Exit(FSMData data) { }
 
     public void AddMap(FSMTriggerID triggerID, FSMStateID stateID) {

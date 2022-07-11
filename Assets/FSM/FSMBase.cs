@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-// 只负责state的初始化和切换
 public class FSMBase : MonoBehaviour
 {
     [SerializeField] private FSMStateID defaultStateID = default;
@@ -42,7 +41,7 @@ public class FSMBase : MonoBehaviour
 
         var attack = new AttackState();
         attack.AddMap(FSMTriggerID.NoHealth, FSMStateID.Dead);
-        attack.AddMap(FSMTriggerID.OutAttackRange, FSMStateID.Idle);
+        attack.AddMap(FSMTriggerID.OutAttackRange, FSMStateID.Pursuit);
         states.Add(attack);
 
         var dead = new DeadState();
