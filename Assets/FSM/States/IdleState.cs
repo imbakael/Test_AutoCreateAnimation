@@ -7,8 +7,11 @@ public class IdleState : FSMState {
     }
 
     public override void Enter(FSMData data) {
-        //Debug.Log("Enter IdleState");
-        // 空闲动画
-        
+        Debug.Log("Enter IdleState");
+        data.IdleAnim();
+    }
+
+    public override void Execute(FSMData data) {
+
     }
 }

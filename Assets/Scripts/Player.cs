@@ -3,10 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour {
+public class Player : MonoBehaviour {
 
     [SerializeField] private Rigidbody2D rigidbody2D = default;
     [SerializeField] private float speed = default;
+
+    public int hp = 100;
 
     private void Update() {
         Move();

@@ -6,5 +6,6 @@ public enum FSMTriggerID {
     FindTarget, // 发现目标
     LoseTarget, // 丢失目标
     InAttackRange, // 进入攻击范围
-    OutAttackRange // 离开攻击范围
+    OutAttackRange, // 离开攻击范围
+    CompleteSpot // 遇敌结束
 }

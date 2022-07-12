@@ -19,7 +19,7 @@ public class FSMBase : MonoBehaviour
         InitDefaultState();
     }
 
-    public virtual void ConfigFSM() {
+    private void ConfigFSM() {
         states = new List<FSMState>();
 
         var idle = new IdleState();
@@ -30,8 +30,8 @@ public class FSMBase : MonoBehaviour
 
         var spot = new SpotState();
         spot.AddMap(FSMTriggerID.NoHealth, FSMStateID.Dead);
-        spot.AddMap(FSMTriggerID.FindTarget, FSMStateID.Pursuit);
-        spot.AddMap(FSMTriggerID.LoseTarget, FSMStateID.Idle);
+        spot.AddMap(FSMTriggerID.CompleteSpot, FSMStateID.Pursuit);
+        states.Add(spot);
 
         var pursuit = new PursuitState();
         pursuit.AddMap(FSMTriggerID.NoHealth, FSMStateID.Dead);
@@ -53,9 +53,10 @@ public class FSMBase : MonoBehaviour
         currentState = defaultState;
         currentState.Enter(FsmData);
     }
-    
-    public void TurnUpdate() {
+
+    private void Update() {
         currentState.Check(this);
+        currentState.Execute(FsmData);
     }
 
     public void ChangeState(FSMStateID stateID) {
@@ -67,9 +68,5 @@ public class FSMBase : MonoBehaviour
         currentState = nextState;
         currentState.Enter(FsmData);
         test_currentStateID = currentState.StateID;
-    }
-
-    public FSMStateID GetCurrentStateID() {
-        return currentState.StateID;
     }
 }

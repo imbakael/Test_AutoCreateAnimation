@@ -168,7 +168,6 @@ public class BuildAnimation : EditorWindow {
         FileInfo[] images = dictorys.GetDirectories().FirstOrDefault().GetFiles("*.png");
         Array.Sort(images, CompareFileInfo);
         var go = new GameObject(dictorys.Name);
-        go.AddComponent<UnitAnimation>();
         SpriteRenderer spriteRender = go.AddComponent<SpriteRenderer>();
         Debug.Log("prefabÄ¬ÈÏÍ¼Æ¬ = " + DataPathToAssetPath(images[0].FullName));
         spriteRender.sprite = AssetDatabase.LoadAssetAtPath<Sprite>(DataPathToAssetPath(images[0].FullName));

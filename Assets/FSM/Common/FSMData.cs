@@ -5,30 +5,38 @@ using System;
 
 public class FSMData {
     private FSMBase fsm;
+    private Npc npc;
+
+    public float AttackInterval => npc.attakcInterval;
+    public bool IsSpotting { get; set; }
 
     public FSMData(FSMBase fsm) {
         this.fsm = fsm;
+        npc = fsm.GetComponent<Npc>();
     }
 
-    public bool NoHealth() => false;
+    public bool NoHealth() => npc.hp <= 0;
 
-    public bool FindTarget() => false;
+    public bool FindTarget() => npc.FindTarget(GameController.Instance.player.transform);
 
     public bool LoseTarget() => !FindTarget();
 
-    public bool IsInAttackRange() => false;
+    public bool IsInAttackRange() => npc.IsInAttackRange(GameController.Instance.player.transform);
 
     public bool IsOutAttackRange() => !IsInAttackRange();
 
-    public void Attack() { }
+    public void IdleAnim() { }
 
-    public void SetIdle() { }
+    public void SpotAnim() { }
 
-    public void Move() { }
+    public void PursuitAnim() { }
 
-    public void Dead() {
+    public void AttackAnim() { }
+
+    public void DeadAnim() {
         fsm.enabled = false;
     }
 
-    public void TurnUpdate() => fsm.TurnUpdate();
+    public void MoveTo() => npc.MoveTo(GameController.Instance.player.transform.position);
+
 }

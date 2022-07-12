@@ -1,25 +1,23 @@
-﻿
-using UnityEngine;
+﻿using UnityEngine;
 
 public class AttackState : FSMState {
-    private FSMData data;
+
+    private float attackTime;
 
     public override void Init() {
         StateID = FSMStateID.Attack;
     }
 
     public override void Enter(FSMData data) {
-        this.data = data;
         Debug.Log("Enter AttackState");
-        data.Attack();
+        attackTime = 0f;
     }
 
-    private void AttackEnd() {
-        Debug.Log("npc 攻击结束");
-        data.TurnUpdate();
+    public override void Execute(FSMData data) {
+        if (attackTime <= Time.time) {
+            data.AttackAnim();
+            attackTime = Time.time + data.AttackInterval;
+        }
     }
 
-    public override void Exit(FSMData data) {
-    
-    }
 }
