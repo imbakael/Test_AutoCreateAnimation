@@ -5,9 +5,9 @@ using System;
 
 public class FSMData {
     private FSMBase fsm;
-    private Npc npc;
+    public Npc npc;
 
-    public float AttackInterval => npc.attakcInterval;
+    public float AttackInterval => npc.attackInterval;
     public bool IsSpotting { get; set; }
 
     public FSMData(FSMBase fsm) {
@@ -15,6 +15,7 @@ public class FSMData {
         npc = fsm.GetComponent<Npc>();
     }
 
+    #region trigger
     public bool NoHealth() => npc.hp <= 0;
 
     public bool FindTarget() => npc.FindTarget(GameController.Instance.player.transform);
@@ -24,19 +25,29 @@ public class FSMData {
     public bool IsInAttackRange() => npc.IsInAttackRange(GameController.Instance.player.transform);
 
     public bool IsOutAttackRange() => !IsInAttackRange();
+    #endregion
 
-    public void IdleAnim() { }
+    #region 动画
+    public void IdleAnim() => npc.IdleAnim();
 
-    public void SpotAnim() { }
+    public void SpotAnim() => npc.SpotAnim();
 
-    public void PursuitAnim() { }
+    public void PursuitAnim() => npc.PursuitAnim();
 
-    public void AttackAnim() { }
+    public void AttackAnim() => npc.AttackAnim();
 
     public void DeadAnim() {
         fsm.enabled = false;
+        npc.DeadAnim();
     }
+    #endregion
 
-    public void MoveTo() => npc.MoveTo(GameController.Instance.player.transform.position);
+    public void IdleMoveTo(Vector2 target) => npc.IdleMoveTo(target);
+
+    public void PursuitMoveTo(Vector2 target) => npc.PursuitMoveTo(target);
+
+    public bool IsArrive(Vector2 target) => npc.IsArrive(target);
+
+    public void LookAtPlayer() => npc.LookAt(GameController.Instance.player.transform.position);
 
 }

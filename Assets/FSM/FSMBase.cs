@@ -41,7 +41,7 @@ public class FSMBase : MonoBehaviour
 
         var attack = new AttackState();
         attack.AddMap(FSMTriggerID.NoHealth, FSMStateID.Dead);
-        attack.AddMap(FSMTriggerID.OutAttackRange, FSMStateID.Pursuit);
+        attack.AddMap(FSMTriggerID.AttackEnd, FSMStateID.Pursuit);
         states.Add(attack);
 
         var dead = new DeadState();
@@ -52,6 +52,7 @@ public class FSMBase : MonoBehaviour
         defaultState = states.Find(t => t.StateID == defaultStateID);
         currentState = defaultState;
         currentState.Enter(FsmData);
+        test_currentStateID = currentState.StateID;
     }
 
     private void Update() {

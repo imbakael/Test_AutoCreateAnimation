@@ -16,5 +16,14 @@ public class GameController : MonoBehaviour {
 
     public Player player;
     public Npc npc;
+    public GameObject mogubenti;
+
+    public Transform[] points;
+
+    public GameObject CreateMogu(Vector2 position) {
+        GameObject go = Instantiate(mogubenti);
+        go.transform.position = position;
+        return go;
+    }
 
 }

@@ -5,10 +5,14 @@ using UnityEngine;
 
 public class Player : MonoBehaviour {
 
-    [SerializeField] private Rigidbody2D rigidbody2D = default;
     [SerializeField] private float speed = default;
 
     public int hp = 100;
+    private Rigidbody2D rigidbody2D;
+
+    private void Awake() {
+        rigidbody2D = GetComponent<Rigidbody2D>();
+    }
 
     private void Update() {
         Move();

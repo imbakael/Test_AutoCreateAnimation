@@ -11,6 +11,7 @@ public class SpotState : FSMState {
 
     public override void Enter(FSMData data) {
         Debug.Log("Enter SpotState");
+        data.LookAtPlayer();
         data.SpotAnim();
         data.IsSpotting = true;
         duration = 0f;

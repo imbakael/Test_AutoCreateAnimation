@@ -12,6 +12,6 @@ public class PursuitState : FSMState {
     }
 
     public override void Execute(FSMData data) {
-        data.MoveTo();
+        data.PursuitMoveTo(GameController.Instance.player.transform.position);
     }
 }

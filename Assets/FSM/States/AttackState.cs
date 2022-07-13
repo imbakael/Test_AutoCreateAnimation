@@ -2,7 +2,7 @@
 
 public class AttackState : FSMState {
 
-    private float attackTime;
+    private float attackTime = 0f;
 
     public override void Init() {
         StateID = FSMStateID.Attack;
@@ -10,11 +10,12 @@ public class AttackState : FSMState {
 
     public override void Enter(FSMData data) {
         Debug.Log("Enter AttackState");
-        attackTime = 0f;
+        data.npc.IsAttackEnd = false;
     }
 
     public override void Execute(FSMData data) {
         if (attackTime <= Time.time) {
+            data.LookAtPlayer();
             data.AttackAnim();
             attackTime = Time.time + data.AttackInterval;
         }
