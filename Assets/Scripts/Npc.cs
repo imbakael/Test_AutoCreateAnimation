@@ -42,7 +42,6 @@ public class Npc : MonoBehaviour {
         originalY = pivot.localPosition.y;
     }
 
-
     private void OnAttackEnd() {
         IsAttackEnd = true;
     }
@@ -74,8 +73,7 @@ public class Npc : MonoBehaviour {
 
     private void MoveTo(Vector2 target, float speed) {
         LookAt(target);
-        float directionValue = (target.x - transform.position.x) > 0 ? 1 : -1;
-        transform.position = new Vector2(transform.position.x + directionValue * speed * Time.deltaTime, 0);
+        transform.position = Vector2.MoveTowards(transform.position, new Vector2(target.x, 0.2f), speed * Time.deltaTime);
         pivot.localPosition = new Vector2(pivot.localPosition.x, originalY + floatRange * Mathf.Sin(Time.time * floatSpeed));
     }
 
