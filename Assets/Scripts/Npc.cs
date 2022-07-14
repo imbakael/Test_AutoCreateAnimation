@@ -7,7 +7,9 @@ public enum NpcAnimationType {
     Idle, // ÐÝÃß
     Spot, // ÓöµÐ
     Pursuit, // ×·»÷(¿ìËÙÒÆ¶¯)
-    Attack,
+    Attack1,
+    Attack2,
+    Attack3,
     Dead
 }
 
@@ -92,7 +94,10 @@ public class Npc : MonoBehaviour {
 
     public void PursuitAnim() => SetAnimation(NpcAnimationType.Pursuit);
 
-    public void AttackAnim() => SetAnimation(NpcAnimationType.Attack);
+    public void AttackAnim() {
+        int random = UnityEngine.Random.Range(3, 6);
+        SetAnimation((NpcAnimationType)random);
+    }
 
     public void DeadAnim() {
         SetAnimation(NpcAnimationType.Dead);

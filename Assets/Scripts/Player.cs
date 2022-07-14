@@ -8,10 +8,10 @@ public class Player : MonoBehaviour {
     [SerializeField] private float speed = default;
 
     public int hp = 100;
-    private Rigidbody2D rigidbody2D;
+    private Rigidbody2D rb;
 
     private void Awake() {
-        rigidbody2D = GetComponent<Rigidbody2D>();
+        rb = GetComponent<Rigidbody2D>();
     }
 
     private void Update() {
@@ -19,9 +19,7 @@ public class Player : MonoBehaviour {
     }
 
     private void Move() {
-        float horizontal = Input.GetAxis("Horizontal");
-        if (horizontal != 0) {
-            rigidbody2D.velocity = new Vector2(horizontal * speed * Time.deltaTime, rigidbody2D.velocity.y);
-        }
+        float horizontal = Input.GetAxisRaw("Horizontal");
+        transform.position = new Vector3(transform.position.x + horizontal * speed * Time.deltaTime, transform.position.y, 0);
     }
 }
